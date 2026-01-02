@@ -1,0 +1,154 @@
+### README.1ST --- 22 June 2020
+
+Please READ before copying any of these files to /opt/etc/syslog-ng.d/
+
+****    If you simply copy all of the files in this directory to    ****
+****    /opt/etc/syslog-ng.d/ the next time you try to restart      ****
+****    syslog-ng it will not start.                                ****
+
+Some of the files in this directory may be copied to /opt/etc/syslog-ng.d/
+to filter common messages from the default messages file to their own
+log files.  Note that when copying the files, they must be writable by the
+user only, i.e. chmod 600.  If the group or others can write to them, they
+will not be loaded by syslog-ng.
+
+It is highly recommended to copy the corresponding file of the same name
+in /opt/share/logrotate/examples/ to /opt/etc/logroate.d/ to ensure the
+log files do not grow too large.  If there is not corresponding file in
+/opt/share/logrotate/examples, then either the file is not intended to be
+used permanently (e.g. expandlog); or should generate no or very few log
+entries (e.g. blankmsg, errormsg); or its logs are handled by other
+programs (e.g. skynet).
+
+Notes:      1)  All ".log" files will be in /opt/var/log/.
+            2)  Unless otherwise noted, all filters are "final", meaning
+                messages matched by the filter will not be logged in the
+                default messages file.
+
+The files in this directory are:
+    A00remote   Sends _ALL_ messages to a remote logging facility before
+                processing by any of the filters below.  This is not a
+                blocking filter, all messages will still be processed by
+                the other filters to be logged to local log files.  See the
+                README_REMOTE file for further information on setting up
+                remote logging and other options for sending only certain
+                messages to a remote logging facility.
+
+    acsd        Filters out messages from Broadcomm's Automatic Channel
+                Selector Daemon. 
+
+    afpd        Filters out messages related to daemons supporting Apple
+                Time Machine, Apple Filing Protocal daemon (afpd) and
+                Catalog Node I/D databae (cnid_dbd).
+
+    bcm63xx     Filters out messages containing "bcm63xx" to bcm63.log.
+                These appear to be mostly nusiance messages.
+
+    blankmsg    Drops any blank messages.  Automatically placed
+                in /opt/etc/syslog-ng.d/ on installation.
+
+    bsd         Filters out "bsd" messages, which have nothing to do with
+                the Berkley [ Software | Standard ] Distribution flavor
+                of unix.  These messages are related to smartconnect.
+
+    crash       Filters out most lines from the dcd_tainted crash messages
+                as well as most lines of other crash messages.  dcd_tainted
+                crash occurs when users enable pixelserv-tls or exclude
+                devices from ad-blocking within Diversion.
+
+    diversion   If you are using the popular Diversion script by 
+                thelonelycoder, this will filter out messages from Diversion
+                and Jack Yaz's uiDivStats script to diversion.log.
+
+    errormsg    Filters out messages from the kernel that it encoutered an
+                error processing a log message.  Normally this shouldn't
+                happen, so there may not be a log file even if this is
+                copied to /opt/etc/syslog-ng.d/.
+
+    ethernet    Filters out messages containing "eth1" thru "eth8", "bro:",
+                and "br1:" to ethernet.log.
+
+    expandlog   This should be used for testing purposes only.  This breaks
+                out every log message into multiple lines, with each part of
+                the message on its own line, into expanded-syslog.log.  This
+                file will get very large very quickly.  There is no
+                corresponding logrotate file in /opt/etc/logrotate.d/ since
+                this is not intended to be used except for testing.  This is
+                not a "final" filter.
+
+    firewall    If you are not using Skynet, this will be automatically
+                copied to /opt/etc/syslog-ng.d/ upon installation of scribe.
+                This filters messages from the firmware firewall containing
+                "ACCEPT IN=" or "DROP IN=" to firewall.log.  Do not use this
+                filter if you are using Skynet.
+
+    ioctl       Filters out I/O control messages.  These are mostly nuicesnce
+                messages.
+
+    jffs        Filters out messages about the jffs directory.  Useful when
+                certain errors with the jffs fiilesystem are encountered as
+                they quickly fill up the logfile. Normally this shouldn't
+                happen, so there may not be a log file even if this is
+                copied to /opt/etc/syslog-ng.d/.
+
+    logrotate   Gathers logrotate's messages from var/lib/logrotate.status
+                and /opt/tmp/logrotate.daily into a single log file in
+                /opt/var/log/logrotate.log.i  Automatically placed in
+                /opt/etc/syslog-ng.d/ on installation.
+
+    meshUDB     Filters "nuisance" messages when you have devices on your
+                wifi network that are non-cooperative with mesh.  Such
+                messages contain "not mesh client" or "exist in UDB".  These
+                messages may coincide with connectivity issues with said
+                devices.  No idea why some devices do not work well with
+                mesh networks.
+
+    netdata     Filters messages from Netdata (available in Entware).  User-
+                contributed by @ttgapers
+
+    ntpd        Entware ntpd sends log messages to /opt/var/spool/ntp/ntp.log
+                instead of the system logging facility.  This gathers those
+                log messages, formats them in the standard syslog-ng format,
+                and puts them in /opt/var/log/ntp.log.  Messages from Jack
+                Yaz's ntpmerlin will also be copied to this log file.
+                Note that the busybox firmware ntpd does not appear to send
+                log messages anywhere at all, not even through the system
+                logging facility.
+
+    openvpn     Filters out messages from "ovpn-server#" or "ovpn-client#" to
+                openvpn.log, where "#" is the server or client number.  Also
+                filters out messages from "openvp-routing" to the same file.
+
+    pixelserv   Filters out messages from pixelserv-tls to pixelserv.log.
+
+    roamast     Filters out messages from the roaming assistant daemon.  These
+                are generally associated with an AiMesh setup
+
+    skynet      If you are using the popular Skynet script by Adamm, this
+                will be automatically copied to /opt/etc/syslog-ng.d/ upon
+                installation of scribe.  This filters any messages from
+                Skynet and messages that contain "BLOCKED -" or "DROP IN=" to
+                skynet-0.log.  On installing scribe, scribe tells Skynet to
+                get its data from skynet-0.log.  This file should normally
+                not ever be copied manually to opt/etc/syslog-ng.d/
+
+    spdmerlin   Filters out spdMerlin's twice-hourly connection speed test
+                results to /opt/var/log/spdmerlin.log
+
+    suricata    Filters messages from the Suricata IDS / IPS/ NSM engine
+                (available in Entware).  User-contributed by @ttgapers
+
+    syslog-ng.conf-opkg     DO NOT COPY THIS FILE TO /opt/etc/syslog-ng.d/!!!
+                            This is a copy of the original syslog-ng.conf
+                            file that is provided by the Entware package, for
+                            reference only.
+
+    syslog-ng.conf-scribe   DO NOT COPY THIS FILE TO /opt/etc/syslog-ng.d/!!!
+                            This is a copy of the current syslog-ng.conf file
+                            that is provided by scribe, for reference only.
+
+    syslogng    Filters out syslog-ng's messages and logging statistics.
+                Automatically placed in /opt/etc/syslog-ng.d/ on installation.
+
+    wlceventd   Filters out messages from the Wireless Lan Controller Daemon.
+                Automatically placed in /opt/etc/syslog-ng.d/ on installation.

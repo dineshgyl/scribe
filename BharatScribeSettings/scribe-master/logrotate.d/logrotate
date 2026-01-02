@@ -1,0 +1,3 @@
+/opt/var/log/logrotate.log {
+    minsize 256k
+}

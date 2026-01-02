@@ -1,0 +1,5 @@
+/opt/var/log/messages {
+    minsize 1024k
+    daily
+    rotate 9
+}

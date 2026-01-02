@@ -130,24 +130,6 @@ log {
 };
 
 #eof
-# put sd-idle messages into /opt/var/log/sdidle.log
-
-destination d_sdidle { 
-    file("/opt/var/log/sdidle.log");
-};
-
-filter f_sdidle {
-    ( message("sd-idle") ); 
-};
-
-log {
-    source(src);
-    filter(f_sdidle);
-    destination(d_sdidle);
-    flags(final);
-};
-
-#eof
 # put syslog-ng's logging stats into /opt/var/log/syslog-ng.log
 
 destination d_syslogng { 

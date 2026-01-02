@@ -1,0 +1,3 @@
+/opt/var/log/syslog-ng.log {
+    minsize 512k
+}

@@ -1,0 +1,5 @@
+/opt/var/log/firewall.log {
+    minsize 1024k
+    daily
+    rotate 9
+}

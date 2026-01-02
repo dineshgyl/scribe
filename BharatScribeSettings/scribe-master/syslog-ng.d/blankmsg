@@ -1,0 +1,14 @@
+# don't log empty messages from kernel
+
+filter f_blank {
+    program("kernel") and
+    message("^ *$");
+};
+
+log {
+    source(src);
+    filter(f_blank);
+    flags(final);
+};
+
+#eof
